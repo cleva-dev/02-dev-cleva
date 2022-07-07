@@ -1,32 +1,57 @@
 <svelte:head>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Changa">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Changa">
+<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hurricane&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Hurricane&family=Inspiration&display=swap" rel="stylesheet">
 <link rel="preload" href="https://fonts.gstatic.com/s/quicksand/v7/6xKtdSZaM9iE8KbpRA_hK1QNYuDyPw.woff2" as="font" crossorigin>
 <link rel="preload" href="https://fonts.gstatic.com/s/lato/v14/S6uyw4BMUTPHjx4wXiWtFCc.woff2" as="font" crossorigin>
-
-
 </svelte:head>
-<h1>cleva</h1>
-<p>Bright ideas from unexpected places</p>
+
 <script>
-	let count = 1;
+	import { onMount } from 'svelte';
+	let date = new Date(), month, day, year;
+	let dateString1;
+	let dateString2;
+onMount(()=> {
+        month = '' + (date.getMonth() + 1),
+        day = '' + date.getDate(),
+        year = date.getFullYear();
+ 
+    if (month.length < 2) 
+        month = '0' + month;
+    if (day.length < 2) 
+        day = '0' + day;
 
-	// the `$:` means 're-run whenever these values change'
-	$: doubled = count * 2;
-	$: quadrupled = doubled * 2;
+dateString1 = [year, month, day].join('-');
+dateString2 = [year, month, day].join('-');
+	})
 
-	function handleClick() {
-		count += 1;
-	}
+         let days = 0;
+
+	 function calculateDaysBetweenDates(begin, end) {
+         let oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
+         let firstDate = new Date(dateString1);
+	 let secondDate = new Date(dateString2);
+         days = Math.round(Math.abs((firstDate.getTime() - secondDate.getTime())/(oneDay)));
+}
+	//console.log(calculateDaysBetweenDates())
 </script>
-<button on:click={handleClick}>
-	Cleva Tip #: {count}
+
+<h1> How many days from or until my next ...</h1>
+<p> Use the date pickers then hit click to get the number of days between your two chosen dates.</p>
+
+
+
+<label>
+<input type=date bind:value={dateString1}>
+<input type=date bind:value={dateString2}>
+</label>
+
+<button on:click={calculateDaysBetweenDates}>
+	Click {days} 
 </button>
-<p>{count} * 2 = {doubled}</p>
-<p>{doubled} * 2 = {quadrupled}</p>
+
 
 <svelte:body />
 <style>
@@ -46,7 +71,6 @@
 }
     h1 {
         font-family: 'Lato', cursive;
-
     }
     button {
 		font-family: "Quicksand", cursive;
@@ -58,6 +82,4 @@
   background-color: lightblue;
   padding: 2%;
 }
-
-
 </style>
